@@ -1,4 +1,130 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/model/Question.dart';
+
+class QuizApp extends StatefulWidget {
+  const QuizApp({Key key}) : super(key: key);
+
+  @override
+  _QuizAppState createState() => _QuizAppState();
+}
+
+class _QuizAppState extends State<QuizApp> {
+  int _currentQuestionIndex = 0;
+
+  List _questionBank = [
+    Question.name("asdwefcewvw", true),
+    Question.name("ewfdweniocewv", false),
+    Question.name("dcdnwioeve", true),
+    Question.name("dsnviowqw", false)
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("True Citizen"),
+          centerTitle: true,
+          backgroundColor: Colors.blueGrey,
+        ),
+        backgroundColor: Colors.blueGrey,
+        body: Builder(
+          builder: (BuildContext context) => Container(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Center(
+              child: Image.asset(
+                "images/flag.png",
+                width: 250,
+                height: 180,
+              ),
+            ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(14.0),
+                          border: Border.all(
+                            color: Colors.grey.shade400,
+                            style: BorderStyle.solid
+                          )
+                        ),
+                        height: 120.0,
+                        child: Center(child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(_questionBank[_currentQuestionIndex%_questionBank.length].questionText,
+                          style: TextStyle(fontSize: 16.0, color: Colors.white),),
+                        )),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RaisedButton(
+                          onPressed: () => _prevQuestion(),
+                          color: Colors.blueGrey.shade900,
+                          child: Icon(Icons.arrow_back, color: Colors.white,),
+                        ),
+                        RaisedButton(
+                          onPressed: () => _checkAnswer(true, context),
+                          color: Colors.blueGrey.shade900,
+                          child: Text("TRUE", style: TextStyle(color: Colors.white),),
+                        ),
+                        RaisedButton(
+                          onPressed: () => _checkAnswer(false, context),
+                          color: Colors.blueGrey.shade900,
+                          child: Text("FALSE", style: TextStyle(color: Colors.white),),
+                        ),
+                        RaisedButton(
+                          onPressed: () => _nextQuestion(),
+                          color: Colors.blueGrey.shade900,
+                          child: Icon(Icons.arrow_forward, color: Colors.white,),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+
+          ])),
+        ));
+  }
+
+  _checkAnswer(bool userChoice, BuildContext context) {
+    if(userChoice == _questionBank[_currentQuestionIndex%_questionBank.length].isCorrect){
+      final snackBar = SnackBar(
+        backgroundColor: Colors.green,
+        content: Text("Yes Correct"),
+        duration: Duration(
+          milliseconds: 500
+        ),
+      );
+
+      Scaffold.of(context).showSnackBar(snackBar);
+    } else {
+      final snackBar = SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("Incorrect"),
+        duration: Duration(
+            milliseconds: 500
+        ),
+      );
+
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
+
+    _nextQuestion();
+  }
+
+  _nextQuestion() {
+    setState(() {
+      _currentQuestionIndex++;
+    });
+  }
+
+  _prevQuestion() {
+    setState(() {
+      _currentQuestionIndex--;
+    });
+  }
+}
 
 class BillSplitter extends StatefulWidget {
   @override
