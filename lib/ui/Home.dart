@@ -1,5 +1,158 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/model/Movie.dart';
 import 'package:hello_world/model/Question.dart';
+
+class MovieListView extends StatefulWidget {
+  const MovieListView({Key key}) : super(key: key);
+
+  @override
+  _MovieListViewState createState() => _MovieListViewState();
+}
+
+class _MovieListViewState extends State<MovieListView> {
+  final List<Movie> movieList = Movie.getMovies();
+
+  final List movies = [
+    "Titanic",
+    "A Quiet Place",
+    "Avengers",
+    "Suits",
+    "Blacklist",
+    "The Family Guy",
+    "FRIENDS",
+    "GoT",
+    "The Wolf of Wall Street"
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Movies"),
+        backgroundColor: Colors.blueGrey.shade900,
+      ),
+      backgroundColor: Colors.blueGrey.shade400,
+      body: ListView.builder(
+          itemCount: movieList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Stack(children: [
+              movieCard(movieList[index], context),
+              Positioned(top: 10.0, child: movieImage(movieList[index].image)),
+            ]);
+            // return Card(
+            //   elevation: 4.5,
+            //   color: Colors.white,
+            //   child: ListTile(
+            //     leading: CircleAvatar(
+            //       child: Container(
+            //         width: 200,
+            //         height: 200,
+            //         decoration: BoxDecoration(
+            //           image: DecorationImage(
+            //             image: NetworkImage(movieList[index].image),
+            //             fit: BoxFit.cover
+            //           ),
+            //           borderRadius: BorderRadius.circular(13.9)
+            //         ),
+            //         child: null,
+            //       ),
+            //     ),
+            //     trailing: Text("..."),
+            //     title: Text(movieList[index].title),
+            //     subtitle: Text("${movieList[index].title}"),
+            //     onTap: () {
+            //       Navigator.push(context, MaterialPageRoute(
+            //           builder: (context) => MovieListViewDetails(movieName: movieList[index].title, movie: movieList[index],)));
+            //     },
+            //   ),
+            // );
+          }),
+    );
+  }
+
+  Widget movieCard(Movie movie, BuildContext context) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.only(left: 60),
+        width: MediaQuery.of(context).size.width,
+        height: 120.0,
+        child: Card(
+          color: Colors.black45,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 54),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(movie.title),
+                    Text("Released: ${movie.year}"),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(movie.director),
+                    Text(movie.language),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MovieListViewDetails(
+                      movieName: movie.title,
+                      movie: movie,
+                    )));
+      },
+    );
+  }
+
+  Widget movieImage(String imageUrl) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(image: NetworkImage(imageUrl))),
+    );
+  }
+}
+
+class MovieListViewDetails extends StatelessWidget {
+  final String movieName;
+  final Movie movie;
+
+  const MovieListViewDetails({Key key, this.movieName, this.movie})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Movies"),
+        backgroundColor: Colors.blueGrey.shade900,
+      ),
+      body: Center(
+        child: Container(
+          child: RaisedButton(
+            child: Text("Go Back ${this.movie.director}"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class QuizApp extends StatefulWidget {
   const QuizApp({Key key}) : super(key: key);
@@ -17,6 +170,7 @@ class _QuizAppState extends State<QuizApp> {
     Question.name("dcdnwioeve", true),
     Question.name("dsnviowqw", false)
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,73 +182,87 @@ class _QuizAppState extends State<QuizApp> {
         backgroundColor: Colors.blueGrey,
         body: Builder(
           builder: (BuildContext context) => Container(
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Center(
-              child: Image.asset(
-                "images/flag.png",
-                width: 250,
-                height: 180,
-              ),
-            ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(14.0),
-                          border: Border.all(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                Center(
+                  child: Image.asset(
+                    "images/flag.png",
+                    width: 250,
+                    height: 180,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(14.0),
+                        border: Border.all(
                             color: Colors.grey.shade400,
-                            style: BorderStyle.solid
-                          )
-                        ),
-                        height: 120.0,
-                        child: Center(child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(_questionBank[_currentQuestionIndex%_questionBank.length].questionText,
-                          style: TextStyle(fontSize: 16.0, color: Colors.white),),
-                        )),
+                            style: BorderStyle.solid)),
+                    height: 120.0,
+                    child: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        _questionBank[
+                                _currentQuestionIndex % _questionBank.length]
+                            .questionText,
+                        style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      ),
+                    )),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      onPressed: () => _prevQuestion(),
+                      color: Colors.blueGrey.shade900,
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RaisedButton(
-                          onPressed: () => _prevQuestion(),
-                          color: Colors.blueGrey.shade900,
-                          child: Icon(Icons.arrow_back, color: Colors.white,),
-                        ),
-                        RaisedButton(
-                          onPressed: () => _checkAnswer(true, context),
-                          color: Colors.blueGrey.shade900,
-                          child: Text("TRUE", style: TextStyle(color: Colors.white),),
-                        ),
-                        RaisedButton(
-                          onPressed: () => _checkAnswer(false, context),
-                          color: Colors.blueGrey.shade900,
-                          child: Text("FALSE", style: TextStyle(color: Colors.white),),
-                        ),
-                        RaisedButton(
-                          onPressed: () => _nextQuestion(),
-                          color: Colors.blueGrey.shade900,
-                          child: Icon(Icons.arrow_forward, color: Colors.white,),
-                        )
-                      ],
+                    RaisedButton(
+                      onPressed: () => _checkAnswer(true, context),
+                      color: Colors.blueGrey.shade900,
+                      child: Text(
+                        "TRUE",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    Spacer(),
-
-          ])),
+                    RaisedButton(
+                      onPressed: () => _checkAnswer(false, context),
+                      color: Colors.blueGrey.shade900,
+                      child: Text(
+                        "FALSE",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    RaisedButton(
+                      onPressed: () => _nextQuestion(),
+                      color: Colors.blueGrey.shade900,
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
+                Spacer(),
+              ])),
         ));
   }
 
   _checkAnswer(bool userChoice, BuildContext context) {
-    if(userChoice == _questionBank[_currentQuestionIndex%_questionBank.length].isCorrect){
+    if (userChoice ==
+        _questionBank[_currentQuestionIndex % _questionBank.length].isCorrect) {
       final snackBar = SnackBar(
         backgroundColor: Colors.green,
         content: Text("Yes Correct"),
-        duration: Duration(
-          milliseconds: 500
-        ),
+        duration: Duration(milliseconds: 500),
       );
 
       Scaffold.of(context).showSnackBar(snackBar);
@@ -102,9 +270,7 @@ class _QuizAppState extends State<QuizApp> {
       final snackBar = SnackBar(
         backgroundColor: Colors.red,
         content: Text("Incorrect"),
-        duration: Duration(
-            milliseconds: 500
-        ),
+        duration: Duration(milliseconds: 500),
       );
 
       Scaffold.of(context).showSnackBar(snackBar);
