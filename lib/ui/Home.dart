@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hello_world/model/Movie.dart';
 import 'package:hello_world/model/Question.dart';
 
+import 'movie_ui/movie_ui.dart';
+
 class MovieListView extends StatefulWidget {
   const MovieListView({Key key}) : super(key: key);
 
@@ -31,7 +33,7 @@ class _MovieListViewState extends State<MovieListView> {
         title: Text("Movies"),
         backgroundColor: Colors.blueGrey.shade900,
       ),
-      backgroundColor: Colors.blueGrey.shade400,
+      backgroundColor: Colors.blueGrey.shade900,
       body: ListView.builder(
           itemCount: movieList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -39,33 +41,6 @@ class _MovieListViewState extends State<MovieListView> {
               movieCard(movieList[index], context),
               Positioned(top: 10.0, child: movieImage(movieList[index].image)),
             ]);
-            // return Card(
-            //   elevation: 4.5,
-            //   color: Colors.white,
-            //   child: ListTile(
-            //     leading: CircleAvatar(
-            //       child: Container(
-            //         width: 200,
-            //         height: 200,
-            //         decoration: BoxDecoration(
-            //           image: DecorationImage(
-            //             image: NetworkImage(movieList[index].image),
-            //             fit: BoxFit.cover
-            //           ),
-            //           borderRadius: BorderRadius.circular(13.9)
-            //         ),
-            //         child: null,
-            //       ),
-            //     ),
-            //     trailing: Text("..."),
-            //     title: Text(movieList[index].title),
-            //     subtitle: Text("${movieList[index].title}"),
-            //     onTap: () {
-            //       Navigator.push(context, MaterialPageRoute(
-            //           builder: (context) => MovieListViewDetails(movieName: movieList[index].title, movie: movieList[index],)));
-            //     },
-            //   ),
-            // );
           }),
     );
   }
@@ -80,25 +55,34 @@ class _MovieListViewState extends State<MovieListView> {
           color: Colors.black45,
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 54),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(movie.title),
-                    Text("Released: ${movie.year}"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(movie.director),
-                    Text(movie.language),
-                  ],
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(movie.title,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0,
+                                color: Colors.white)),
+                      ),
+                      Text("Released: ${movie.year}", style: mainTextStyle()),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(movie.director, style: mainTextStyle()),
+                      Text(movie.language, style: mainTextStyle()),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -113,6 +97,10 @@ class _MovieListViewState extends State<MovieListView> {
                     )));
       },
     );
+  }
+
+  TextStyle mainTextStyle() {
+    return TextStyle(fontSize: 15.0, color: Colors.grey);
   }
 
   Widget movieImage(String imageUrl) {
@@ -140,15 +128,19 @@ class MovieListViewDetails extends StatelessWidget {
         title: Text("Movies"),
         backgroundColor: Colors.blueGrey.shade900,
       ),
-      body: Center(
-        child: Container(
-          child: RaisedButton(
-            child: Text("Go Back ${this.movie.director}"),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      body: ListView(
+        children: [
+          MovieDetailsThubmnail(
+            thumbnail: movie.image,
           ),
-        ),
+          MovieDetailsHeaderWithPoster(
+            movie: movie,
+          ),
+          HorizontalLine(),
+          MovieDetailsCast(movie: movie,),
+          HorizontalLine(),
+          MovieDetailsExtraPosters(posters: movie.posters,)
+        ],
       ),
     );
   }
