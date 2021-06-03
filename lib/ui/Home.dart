@@ -171,7 +171,7 @@ class _QuizAppState extends State<QuizApp> {
           centerTitle: true,
           backgroundColor: Colors.blueGrey,
         ),
-        backgroundColor: Colors.blueGrey,
+        // backgroundColor: Colors.blueGrey,
         body: Builder(
           builder: (BuildContext context) => Container(
               child: Column(
