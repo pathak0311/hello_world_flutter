@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/flutter_maps/quakes_maps_app/quakes_app.dart';
 import 'package:hello_world/parsing_json/json_parsing.dart';
+import 'package:hello_world/weather_forecast/weather_forecast.dart';
 
+import 'flutter_maps/simple_google_map/show_map.dart';
 import 'parsing_json/json_parsing_map.dart';
 import 'ui/Home.dart';
 
@@ -64,5 +67,5 @@ void main() => runApp(new MaterialApp(
       //     )
       //   )
       // ),
-      home: JsonParsingMap(),
+      home: QuakesApp(),
     ));
